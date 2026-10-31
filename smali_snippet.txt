@@ -1,0 +1,9 @@
+GTAVActivity.smali -> onCreate(Landroid/os/Bundle;)V er shurute,
+"invoke-super {p0, p1}, ...->onCreate(...)" line er AGE ei 2 line bosao:
+
+    const-string v0, "foxpostfx"
+    invoke-static {v0}, Ljava/lang/System;->loadLibrary(Ljava/lang/String;)V
+
+Jodi method e ".locals 0" thake, take ".locals 1" kore dao.
+Library ke onno kono jaygay (jemon SDLActivity.loadLibraries) load korano jabe,
+jodi seta game er Vulkan shuru howar age cholay.
