@@ -1,0 +1,24 @@
+name: build
+on: [workflow_dispatch, push]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: tools
+        run: sudo apt-get update && sudo apt-get install -y glslang-tools ninja-build
+      - name: shaders
+        run: |
+          mkdir -p gen
+          glslangValidator -V vs.vert --vn vs_spv -o gen/vs_spv.h
+          glslangValidator -V fs.frag --vn fs_spv -o gen/fs_spv.h
+      - name: build
+        run: |
+          cmake -S . -B out -G Ninja \
+            -DCMAKE_TOOLCHAIN_FILE=$ANDROID_NDK_LATEST_HOME/build/cmake/android.toolchain.cmake \
+            -DANDROID_ABI=arm64-v8a -DANDROID_PLATFORM=android-26 -DCMAKE_BUILD_TYPE=Release
+          cmake --build out
+      - uses: actions/upload-artifact@v4
+        with:
+          name: libfoxpostfx
+          path: out/libfoxpostfx.so
